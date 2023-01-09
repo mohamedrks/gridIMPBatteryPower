@@ -1,0 +1,53 @@
+.example-spacer {
+    flex: 1 1 auto;
+  }
+
+  .percentage-box {
+    width: 35px;
+    height: 155px;
+    display: inline-block;
+    margin: 1px;
+  }
+
+
+  .color-charging {
+    color: white;
+    font-weight: bold;
+    background-color: rgb(36, 219, 118);
+  }
+
+  .color-discharging {
+    color: white;
+    font-weight: bold;
+    background-color: rgb(247, 113, 103);
+  }
+
+  .color-header {
+    color: white;
+    font-weight: bold;
+    background-color: rgb(70, 170, 216);
+  }
+
+  .example-card {
+    max-width: 400px;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  .example-container {
+    height: 600px;
+    max-width: 100%;
+    overflow: auto;
+  }
+  
+  
+  .example-header-image {
+    background-image: url('../assets/images/logoGridIMP.png');
+    background-size: cover;
+  }
+
+  mat-chip {
+    max-width: 20px;
+  }
