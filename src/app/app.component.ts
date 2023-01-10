@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
   color: string = '#3DCC93';
   percentage: number = 0;
   arrayColor: any = [];
-  totalPin = 48;
+  totalPin = 12;
   pinColor = '#efefed';
 
   Battery_DATA: BatteryData[] = [];
@@ -114,7 +114,7 @@ export class AppComponent implements OnInit {
         this.liveCharginPerHour = this.dataSource.find( d => Number(d.period) == currentBatteryPeriod)?.charging || 0;
         this.liveDisharginPerHour = this.dataSource.find( d => Number(d.period) == currentBatteryPeriod)?.discharging || 0;
 
-        resolve(this.percentage);
+        resolve([this.percentage, this.liveBillingPeriod, this.liveCharginPerHour, this.liveDisharginPerHour]);
       });
 
       promise.then((success) => {
@@ -129,10 +129,10 @@ export class AppComponent implements OnInit {
     let currentLevel = 0 + part;
     for (let i = 0; i < this.totalPin; i++) {
       if (this.percentage >= currentLevel) {
-        this.arrayColor.push({ full: true, color: this.color, width: '35px' });
+        this.arrayColor.push({ full: true, color: this.color, width: '7px' });
         currentLevel += part;
       } else {
-        const newWidth = ((this.percentage - currentLevel + part) * 35) / 20;
+        const newWidth = ((this.percentage - currentLevel + part) * 7) / 20;
         this.arrayColor.push({
           full: false,
           color: this.pinColor,
@@ -142,7 +142,7 @@ export class AppComponent implements OnInit {
           this.arrayColor.push({
             full: true,
             color: this.pinColor,
-            width: '35px',
+            width: '7px',
           });
         }
         break;

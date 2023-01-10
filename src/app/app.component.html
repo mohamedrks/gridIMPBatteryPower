@@ -1,4 +1,5 @@
-<p>
+
+  <div style="display: flex;">
     <mat-toolbar color="primary">
       <span>gridIMP</span>
 
@@ -6,23 +7,13 @@
       
       <span> Time now -- </span>
       <span> {{timeNow}} </span>
-    </mat-toolbar>
-  </p>
-
-  <div class="percentage-box" *ngFor="let item of arrayColor" [ngStyle]="{ 'background-color': item.color }">
-	<ng-template [ngIf]="item.full == false">
-		<div [ngStyle]="{ 'background-color': color, width: item.width, height: '155px' }"></div>
-	</ng-template>
+  </mat-toolbar>
   </div>
 
   <div style="display: flex;">
     <mat-card style="flex: 1 1 auto;">
         <div class="example-container">
             <table mat-table [dataSource]="dataSource" class=" mat-elevation-z8">
-    
-                <!--- Note that these columns can be defined in any order.
-                      The actual rendered columns are set as a property on the row definition" -->
-              
                 <!-- Position Column -->
                 <ng-container matColumnDef="period">
                   <th mat-header-cell *matHeaderCellDef> Period. </th>
@@ -62,7 +53,7 @@
             </table>
       </div>
     </mat-card>
-    <mat-card style="flex: 1 1 auto;"> 
+    <mat-card style="flex: 1 1 auto;">
         <mat-card class="example-card">
             <mat-card-header>
               <div mat-card-avatar class="example-header-image"></div>
@@ -89,6 +80,11 @@
               <p *ngIf="liveDisharginPerHour > 0">
                 <b>Battery discharging now in kWh</b>  {{liveDisharginPerHour}}
               </p>
+              <div class="percentage-box" *ngFor="let item of arrayColor" [ngStyle]="{ 'background-color': item.color }">
+                <ng-template [ngIf]="item.full == false">
+                  <div [ngStyle]="{ 'background-color': color, width: item.width, height: '25px' }"></div>
+                </ng-template>
+              </div>
             </mat-card-content>
           </mat-card>
     </mat-card>
