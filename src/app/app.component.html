@@ -2,7 +2,7 @@
   <div style="display: flex;">
     <mat-toolbar color="primary">
       <span>gridIMP</span>
-      <span class="example-spacer"></span>
+      <span class="toolbar-spacer"></span>
       <span> Save the world with green energy. </span>
   </mat-toolbar>
   </div>
@@ -10,85 +10,79 @@
   <!-- Main div of front page. -->
   <div style="display: flex;">
     <mat-card class="table-card" style="flex: 1 1 auto;">
-        <div class="example-container">
-            <table mat-table [dataSource]="dataSource" class=" mat-elevation-z8">
+        <div class="table-container">
+            <table mat-table [dataSource]="dataSource" class=" mat-elevation-z8" matSort>
                 <!-- Period Column -->
                 <ng-container matColumnDef="period">
                   <th mat-header-cell *matHeaderCellDef> Period. </th>
                   <td mat-cell *matCellDef="let element"> {{element.period}} </td>
                 </ng-container>
               
-                <!-- State of charging Column -->
-                <ng-container matColumnDef="stateofcharging">
-                  <th mat-header-cell *matHeaderCellDef> State of charging. </th>
-                  <td mat-cell *matCellDef="let element"> {{element.stateofcharging}} </td>
-                </ng-container>
-              
-                <!--  -->
-                <ng-container matColumnDef="charging">
-                  <th mat-header-cell *matHeaderCellDef> Charging. </th>
-                  <td mat-cell *matCellDef="let element"> {{element.charging}} </td>
-                </ng-container>
-              
-                <ng-container matColumnDef="discharging">
-                  <th mat-header-cell *matHeaderCellDef> Discharging. </th>
-                  <td mat-cell *matCellDef="let element"> {{element.discharging}} </td>
-                </ng-container>
-              
-                <!-- Weight Column -->
+                <!-- Battery action Column -->
                 <ng-container matColumnDef="action">
                   <th mat-header-cell *matHeaderCellDef> Charging status. </th>
                   <td mat-cell *matCellDef="let element"> {{element.action}} </td>
                 </ng-container>
               
-                <!-- Symbol Column -->
+                <!-- Billing period Column -->
                 <ng-container matColumnDef="billingPeriod">
                   <th mat-header-cell *matHeaderCellDef > Billing period. </th>
                   <td mat-cell *matCellDef="let element"> {{element.billingPeriod}} </td>
                 </ng-container>
+
+                <!-- State of charging Column -->
+                <ng-container matColumnDef="stateofcharging">
+                  <th mat-header-cell *matHeaderCellDef> State of charging. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.stateofcharging}} </td>
+                </ng-container>
+
+                <!-- Charging per hour Column -->
+                <ng-container matColumnDef="charging">
+                  <th mat-header-cell *matHeaderCellDef> Charging. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.charging}} </td>
+                </ng-container>
+                
+                <!-- Discharging per hour Column -->
+                <ng-container matColumnDef="discharging">
+                  <th mat-header-cell *matHeaderCellDef> Discharging. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.discharging}} </td>
+                </ng-container>
               
                 <tr mat-header-row *matHeaderRowDef="displayedColumns" [class.color-header]="color"></tr>
+                <!-- row color has changed according to the value is charging or discharging -->
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.color-charging]="row.charging > 0" [class.color-discharging]="row.discharging > 0"></tr>
             </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
       </div>
     </mat-card>
     <mat-card style="flex: 1 1 auto;">
-        <mat-card class="example-card">
-            <mat-card-header>
-              <div mat-card-avatar class="example-header-image"></div>
-              <mat-card-title>grid IMP</mat-card-title>
-              <mat-card-subtitle>Live battery status.</mat-card-subtitle>
+        <mat-card class="matinfo-card">
+            <mat-card-header class="card-border">
+              <div mat-card-avatar class="matcard-header-image"></div>
+              <mat-card-title>grid IMP Live battery status.</mat-card-title>
+              <mat-card-subtitle>Power details below.</mat-card-subtitle>
             </mat-card-header>
-            <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" class="opacity: 0.5;" alt="Photo of a Shiba Inu"> -->
             <mat-card-content>
-              <p>
-                gridIMP live power details below.
-              </p>
+              <!-- Current battery status for the period. -->
               <div class="flex-container">
-
                 <div class="flex-child magenta">
                   Current Battery Status 
-                </div>
-                
+                </div>            
                 <div class="flex-child green">
                   {{action}}
-                </div>
-                
+                </div>         
               </div>
-            
+              <!-- Current billing period. -->
               <div class="flex-container">
-
                 <div class="flex-child magenta">
                   Current billing period 
-                </div>
-                
+                </div>            
                 <div class="flex-child green">
                   {{liveBillingPeriod}}
                 </div>                
               </div>
-
+              <!-- Current battery charging percentage. -->
               <div class="flex-container">
-
                 <div class="flex-child magenta">
                   Battery charge percentage now. 
                 </div>               
@@ -96,9 +90,8 @@
                   {{percentage}}%
                 </div>                
               </div>
-
+              <!-- Current battery charging per hour in kWh. only enabled as per the condition. -->
               <div *ngIf="liveCharginPerHour > 0" class="flex-container">
-
                 <div class="flex-child magenta">
                   Battery charging now in kWh. 
                 </div>               
@@ -106,9 +99,8 @@
                   {{liveCharginPerHour}}
                 </div>                
               </div>
-
+              <!-- Current battery discharging percentage in kWh. only enabled as per the condition -->
               <div *ngIf="liveDisharginPerHour > 0" class="flex-container">
-
                 <div class="flex-child magenta">
                   Battery discharging now in kWh. 
                 </div>               
@@ -116,7 +108,7 @@
                   {{liveDisharginPerHour}}
                 </div>                
               </div>
-
+              <!-- Battery status in cell level. -->
               <div class="percentage-box" *ngFor="let item of arrayColor" [ngStyle]="{ 'background-color': item.color }">
                 <ng-template [ngIf]="item.full == false">
                   <div [ngStyle]="{ 'background-color': color, width: item.width, height: '25px' }"></div>

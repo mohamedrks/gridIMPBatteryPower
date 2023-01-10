@@ -1,32 +1,8 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { BatteryAction, BatteryData, BillPeriod } from './models/helper';
 import { BatteryService } from './services/battery/battery.service';
 import { BillingPeriodService } from './services/billing/billing.service';
 
-export enum BatteryAction {
-  CHARGE = 'Charging',
-  NONE = 'Not Charging',
-  DISCHARGE = 'Discharging',
-}
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
-
-export interface BillPeriod {
-  period: number;
-  time: string;
-}
-
-export interface BatteryData {
-  period: string;
-  action: string;
-  billingPeriod: string;
-  stateofcharging: number;
-  charging: number;
-  discharging: number;
-}
 
 @Component({
   selector: 'app-root',
@@ -34,6 +10,7 @@ export interface BatteryData {
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  
   timeNow: string = '';
   action: string = '';
   liveBillingPeriod: string = '';
@@ -48,7 +25,6 @@ export class AppComponent implements OnInit {
 
   Battery_DATA: BatteryData[] = [];
   BillPeriod_DATA: BillPeriod[] = [];
-
   displayedColumns: string[] = [
     'period',
     'action',
@@ -71,28 +47,16 @@ export class AppComponent implements OnInit {
       });
   }
 
-  createBatteryData(id: number, dataB: any[]): BatteryData {
-    return {
-      action: dataB[id]?.Action,
-      period: dataB[id]?.Period,
-      billingPeriod:
-        this.BillPeriod_DATA.find((p) => p.period == dataB[id]?.Period)?.time ||
-        '',
-      stateofcharging: dataB[id]?.['State-of-Charge'],
-      charging: dataB[id]?.['Charged-kwH'],
-      discharging: dataB[id]?.['Discharged-kwH'],
-    };
-  }
-
   ngOnInit(): void {
     this.batteryService.getBatteryData().subscribe((batteryData: any[]) => {
+
       this.dataSource = Array.from({ length: batteryData.length }, (_, k) =>
         this.createBatteryData(k, batteryData)
       );
 
       const promise = new Promise((resolve, reject) => {
-        const time = this.batteryService.getCurrentPeriod();
-        console.log('time now => ' + time.Hour + ' ' + time.Minute);
+
+        const time = this.batteryService.getCurrentTime();
         let currentBatteryPeriod = time.Hour * 2;
         if (time.Minute <= 30) {
           currentBatteryPeriod++;
@@ -100,7 +64,7 @@ export class AppComponent implements OnInit {
         if (time.Minute > 30) {
           currentBatteryPeriod = currentBatteryPeriod + 2;
         }
-        console.log('Current Battery Period => ' + currentBatteryPeriod);
+
         const batteryPeriod = batteryData.find(
           (p) => p.Period == currentBatteryPeriod
         );
@@ -127,13 +91,27 @@ export class AppComponent implements OnInit {
         ]);
       });
 
-      promise.then((success) => {
-        console.log(this.percentage + '  pectg value ------------>');
+      promise.then(() => {
         this.renderArrayColor();
       });
     });
   }
 
+  // Table data modifer.
+  createBatteryData(id: number, dataB: any[]): BatteryData {
+    return {
+      action: dataB[id]?.Action,
+      period: dataB[id]?.Period,
+      billingPeriod:
+        this.BillPeriod_DATA.find((p) => p.period == dataB[id]?.Period)?.time ||
+        '',
+      stateofcharging: dataB[id]?.['State-of-Charge'],
+      charging: dataB[id]?.['Charged-kwH'],
+      discharging: dataB[id]?.['Discharged-kwH'],
+    };
+  }
+
+  // Battery status display text.
   getDisplayText(text: string): string {
     switch (text) {
       case 'CHARGE': {
@@ -151,6 +129,7 @@ export class AppComponent implements OnInit {
     }
   }
 
+  // Battery cell making method.
   renderArrayColor() {
     const part = 100 / this.totalPin;
     let currentLevel = 0 + part;

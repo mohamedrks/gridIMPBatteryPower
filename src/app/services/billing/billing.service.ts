@@ -12,6 +12,7 @@ export class BillingPeriodService {
 
   constructor(private http: HttpClient) {}
 
+  // Returns billing period data from json file.
   getBillingPeriodData(): Observable<any[]> {
     return this.http.get<any[]>(this._jsonURL);
   }

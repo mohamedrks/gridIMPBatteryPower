@@ -21,12 +21,13 @@ export class BatteryService {
 
   constructor(private http: HttpClient) {}
 
+  // Return battery data from json file.
   getBatteryData(): Observable<any[]> {
     return this.http.get<any[]>(this._jsonURL);
   }
 
-
-  getCurrentPeriod(): Time {
+  // method return current time in hours and minutes.
+  getCurrentTime(): Time {
     
     const currentTime = new Date();
     const hour = currentTime.getHours();
